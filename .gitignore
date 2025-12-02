@@ -1,0 +1,27 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+
+# Logs & caches
+logs/**
+!logs/.gitkeep
+*.log
+.cache/
+
+# Data (never commit)
+H:/DataLake/
+H:/DataWarehouse/
+DataLake/
+DataWarehouse/
+
+# VS Code
+.vscode/.ropeproject/
+.vscode/ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db

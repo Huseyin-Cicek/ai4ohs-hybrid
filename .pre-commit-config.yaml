@@ -1,0 +1,34 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks: [ {id: black} ]
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.6.9
+    hooks: [ {id: ruff, args: ["--fix"]} ]
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.13.2
+    hooks: [ {id: isort} ]
+  - repo: local
+    hooks:
+      - id: lint
+        name: Ruff Lint (Repo Shortcut)
+        entry: ruff check
+        language: system
+        types_or: [python]
+      - id: type-check
+        name: Mypy Type Check (Repo Shortcut)
+        entry: mypy
+        language: system
+        pass_filenames: false
+        args: ["--config-file=setup.cfg", "src"]
+      - id: unit-test
+        name: Pytest Unit Tests (Repo Shortcut)
+        entry: pytest
+        language: system
+        pass_filenames: false
+        args: ["tests/unit"]
+      - id: check-md-links
+        name: Markdown Link Checker
+        entry: python scripts/tools/check_md_links.py
+        language: system
+        files: \.md$

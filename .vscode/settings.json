@@ -1,0 +1,131 @@
+{
+  // ── General UX / Stability ───────────────────────────────────────────────────
+  "telemetry.telemetryLevel": "off",
+  "update.mode": "manual",
+  "extensions.autoUpdate": false,
+  "extensions.autoCheckUpdates": false,
+  "workbench.startupEditor": "welcomePage",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.colorTheme": "Atom One Dark",
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "boundary",
+  "editor.rulers": [100],
+  "editor.wordWrap": "on",
+  "editor.smoothScrolling": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+
+  // Büyük repo + veri klasörleri için dosya izleme ve arama optimizasyonu
+  "files.exclude": {
+    "**/.git": true,
+    "**/.venv": true,
+    "**/__pycache__": true,
+    "**/.mypy_cache": true,
+    "**/.pytest_cache": true,
+    "**/*.egg-info": true,
+    "**/DataLake": true,
+    "**/DataWarehouse": true
+  },
+  "files.watcherExclude": {
+    "**/.git/**": true,
+    "**/.venv/**": true,
+    "**/__pycache__/**": true,
+    "**/.mypy_cache/**": true,
+    "**/.pytest_cache/**": true,
+    "**/*.egg-info/**": true,
+    "**/DataLake/**": true,
+    "**/DataWarehouse/**": true
+  },
+  "search.exclude": {
+    "**/.git": true,
+    "**/.venv": true,
+    "**/__pycache__": true,
+    "**/.mypy_cache": true,
+    "**/.pytest_cache": true,
+    "**/*.egg-info": true,
+    "**/DataLake": true,
+    "**/DataWarehouse": true
+  },
+
+  // ── Python (Black + Ruff + Pylance, çakışmasız) ──────────────────────────────
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.inlayHints.variableTypes": true,
+  "python.languageServer": "Pylance",
+  "python.experiments.enabled": false,
+
+  // Formatter seçimi dil bazında
+  "python.formatting.provider": "none",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true
+  },
+
+  // Ruff (lint + import düzenleme); format işini Black yapıyor
+  "ruff.enable": true,
+  "ruff.organizeImports": true,
+  "ruff.fixAll": false,
+
+  // isort eklentisi yüklü ama Ruff import düzenlediği için pasif
+  "isort.check": false,
+
+  // Debug / test
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+
+  // ── Jupyter (yerel kernel, sessiz) ───────────────────────────────────────────
+  "jupyter.jupyterServerType": "local",
+  "jupyter.logging.level": "error",
+  "jupyter.askForKernelRestart": false,
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+
+  // ── Formatter’lar (Python dışı diller) ───────────────────────────────────────
+  "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[markdown]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "prettier.printWidth": 100,
+  "prettier.singleQuote": true,
+
+  // ── ErrorLens (gürültü azaltma) ──────────────────────────────────────────────
+  "errorLens.enabled": true,
+  "errorLens.followCursor": "closestProblem",
+  "errorLens.messageBackgroundMode": "none",
+  "errorLens.fontWeight": "normal",
+  "errorLens.opacity": 30,
+
+  // ── Copilot (gürültü kontrolü) ───────────────────────────────────────────────
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": false
+  },
+  "github.copilot.inlineSuggest.enable": true,
+
+  // Chat talimat dosyaları – sadece hafif docs yapısı
+  "chat.instructionsFilesLocations": {
+    "docs/*.md": true,
+    "docs/*/*.md": true
+  },
+
+  // ── Git / VCS ────────────────────────────────────────────────────────────────
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+
+  // ── PowerShell / Terminal ────────────────────────────────────────────────────
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "powershell.integratedConsole.showOnStartup": false,
+
+  // ── MarkDown / Docs ──────────────────────────────────────────────────────────
+  "markdown.preview.breaks": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  // ── Misc utilities ───────────────────────────────────────────────────────────
+  "todo-tree.tree.showScanModeButton": false,
+  "trailing-spaces.deleteModifiedLinesOnly": true,
+  "resmon.autoStart": false
+}

@@ -1,0 +1,25 @@
+# Feature flag configuration for AI4OHS-HYBRID
+#
+# Usage guidelines:
+#   - "state" supports the lifecycle values: off, beta, on.
+#   - "rollout" allows gradual percentage-based enablement during beta.
+#   - Consumers should rely on Settings.get_feature_flag(...) to read values.
+version: 1
+metadata:
+  updated: "2025-11-10"
+cag:
+  enable_guardrails_v2: false
+  categories:
+    experimental_environmental_controls:
+      state: off
+      rollout: 0.0
+      description: >-
+        Experimental CAG category for environmental control validations.
+        Use "beta" or "on" as the feature graduates through staged rollout.
+pipelines:
+  dry_run_reporting:
+    state: beta
+    rollout: 0.25
+    description: >-
+      Enables extended dry-run reporting that summarizes anticipated outputs
+      without writing artifacts. Gradually increase "rollout" before toggling on.

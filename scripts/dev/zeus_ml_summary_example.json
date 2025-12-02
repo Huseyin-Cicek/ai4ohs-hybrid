@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-12-01T13:00:01.193919",
+  "tasks_completed": [
+    "00_ingest",
+    "01_staging",
+    "02_processing",
+    "03_rag"
+  ],
+  "tasks_failed": [],
+  "next_scheduled": "2025-12-01T19:00:01.193919",
+  "pipeline_status": {
+    "00_ingest": {
+      "last_run": "1970-01-01T03:00:00",
+      "is_stale": true
+    },
+    "01_staging": {
+      "last_run": "1970-01-01T03:00:00",
+      "is_stale": true
+    },
+    "02_processing": {
+      "last_run": "1970-01-01T03:00:00",
+      "is_stale": true
+    },
+    "03_rag": {
+      "last_run": "1970-01-01T03:00:00",
+      "is_stale": true
+    }
+  }
+}

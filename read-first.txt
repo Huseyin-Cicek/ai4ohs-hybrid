@@ -1,0 +1,162 @@
+# Tüm Python kurulumlarını göster
+Get-Command python* | Select-Object Source
+
+# Winget ile kayıtlı Python sürümlerini kaldır
+winget uninstall Python.Python.3.10
+winget uninstall Python.Python.3.11
+winget uninstall Python.Python.3.12
+winget uninstall Python  # Diğer kayıtlı olanları da kaldırır
+
+# Kalan dizinleri sil
+Remove-Item -Recurse -Force "$env:LOCALAPPDATA\Programs\Python" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "$env:ProgramFiles\Python*" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "$env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\Python*" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "$env:APPDATA\Python" -ErrorAction SilentlyContinue
+
+winget uninstall Microsoft.VisualStudioCode
+Remove-Item -Recurse -Force "$env:APPDATA\Code" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "$env:LOCALAPPDATA\Programs\Microsoft VS Code" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "$env:USERPROFILE\.vscode" -ErrorAction SilentlyContinue
+
+VS Code’u Tamamen Kaldır
+winget uninstall Microsoft.VisualStudioCode
+Remove-Item -Recurse -Force "$env:APPDATA\Code" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "$env:LOCALAPPDATA\Programs\Microsoft VS Code" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "$env:USERPROFILE\.vscode" -ErrorAction SilentlyContinue
+
+----------------------------------------------------------------------------------
+
+winget install Python.Python.3.10 --version 3.10.14
+python --version  # 3.10.14 çıktısını görmelisin
+winget install --id Microsoft.VisualStudioCode -e
+----------------------------------------------------------------------------------
+
+python -m venv .venv
+.venv\Scripts\activate
+pip install --upgrade pip setuptools wheel
+----------------------------------------------------------------------------------
+VSCODE Extensions Kurulumu extensions.txt
+# --- Python & Data Science ---
+ms-python.python
+ms-python.vscode-pylance
+ms-python.black-formatter
+ms-python.debugpy
+ms-toolsai.jupyter
+ms-toolsai.jupyter-keymap
+ms-toolsai.jupyter-renderers
+
+# --- Linting / Quality / Formatter ---
+charliermarsh.ruff
+ms-python.isort
+streetsidesoftware.code-spell-checker
+editorconfig.editorconfig
+
+# --- Web / API / Backend (FastAPI, REST) ---
+rangav.vscode-thunder-client
+humao.rest-client
+formulahendry.code-runner
+aaron-bond.better-comments
+
+# --- Git / Version Control ---
+eamodio.gitlens
+donjayamanne.githistory
+github.vscode-pull-request-github
+
+# --- Dev Environment & Utilities ---
+ms-vscode.powershell
+usernamehw.errorlens
+esbenp.prettier-vscode
+gruntfuggly.todo-tree
+oderwat.indent-rainbow
+shardulm94.trailing-spaces
+mutantdino.resourcemonitor
+
+# --- AI / Code Intelligence (offline-safe) ---
+github.copilot
+github.copilot-chat
+visualstudiointellicode
+
+# --- Markdown / Docs ---
+yzhang.markdown-all-in-one
+bierner.markdown-preview-github-styles
+jebbs.plantuml
+
+# --- Themes / UI ---
+pkief.material-icon-theme
+akamud.vscode-theme-onedark
+----------------------------------------------------------------------------------
+Yükleme
+cat extensions.txt | % { code --install-extension $_ }
+
+code --list-extensions > extensions.txt #vscode yüklü extenstions kaydı için
+----------------------------------------------------------------------------------
+pip install -r requirements.txt
+pip install -r requirements.txt --index-url https://download.pytorch.org/whl/cu121
+
+pip freeze > installed-library.txt #vscode yüklü library-version kaydı için
+
+pip freeze → tüm yüklü paketleri listeler.
+
+pip uninstall -y $_ → listedeki her birini sessizce kaldırır.
+
+pip install -r requirements.txt → sadece dosyanda belirtilen sabit sürümleri yeniden kurar.
+
+.\.venv\Scripts\activate; pip freeze | % { pip uninstall -y $_ }; pip install -r requirements.txt
+-----------------------------------------------------
+# --- Core numerics ---
+numpy==1.26.4
+scipy==1.11.4
+pandas==2.2.2
+scikit-learn==1.3.2
+tqdm==4.66.5
+orjson==3.10.7
+typing-extensions==4.12.2
+colorama==0.4.6
+
+# --- Torch stack (CUDA 12.1 wheels) ---
+# Not: Kurulumda aşağıdaki gibi ek index verin:
+# pip install -r requirements.txt --index-url https://download.pytorch.org/whl/cu121
+torch==2.3.1
+torchvision==0.18.1
+torchaudio==2.3.1
+safetensors==0.4.4
+accelerate==0.33.0
+
+# --- RAG / NLP ---
+transformers==4.44.0
+tokenizers==0.19.1
+sentence-transformers==2.7.0
+faiss-cpu==1.8.0
+rapidfuzz==3.9.6
+regex==2024.9.11
+nltk==3.9.1
+
+# --- API / Web ---
+fastapi==0.115.2
+uvicorn==0.30.1
+httpx==0.27.2
+aiofiles==23.2.1
+pydantic==2.9.2
+
+# --- Utils / Ops ---
+python-dotenv==1.0.1
+PyYAML==6.0.2
+tenacity==8.5.0
+rich==13.9.2
+loguru==0.7.2
+
+-------------------------------------------------------------------------------------------
+
+{
+  "editor.minimap.enabled": false,
+  "editor.formatOnSave": true,
+  "files.trimTrailingWhitespace": true,
+  "python.linting.enabled": true,
+  "python.linting.ruffEnabled": true,
+  "python.formatting.provider": "black",
+  "python.analysis.typeCheckingMode": "basic",
+  "workbench.iconTheme": "material-icon-theme",
+  "window.zoomLevel": 0,
+  "telemetry.telemetryLevel": "off"
+}
+------------------------------------------------------------------------------------------

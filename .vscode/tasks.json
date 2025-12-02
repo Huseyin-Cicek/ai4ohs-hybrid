@@ -1,0 +1,84 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Pipelines 00→03",
+      "type": "shell",
+      "command": "python src/pipelines/00_ingest/run.py && python src/pipelines/01_staging/run.py && python src/pipelines/02_processing/run.py && python src/pipelines/03_rag/run.py",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "options": {
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Start API",
+      "type": "shell",
+      "command": "uvicorn src.ohs.api.main:app --reload --host 127.0.0.1 --port 8000",
+      "options": {
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Run Full System Validation",
+      "type": "shell",
+      "command": "python scripts/dev/run_all_pipelines.py",
+      "group": {
+        "kind": "test",
+        "isDefault": false
+      },
+      "problemMatcher": [],
+      "options": {
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Format Code (Ruff + Black)",
+      "type": "shell",
+      "command": "ruff check src scripts --fix && black src scripts",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Docs Check",
+      "type": "shell",
+      "command": "python scripts/tools/check_md_links.py",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Simulate Offline CI",
+      "type": "shell",
+      "command": "python scripts/dev/offline_hooks/run_offline.py -- pytest -q",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
