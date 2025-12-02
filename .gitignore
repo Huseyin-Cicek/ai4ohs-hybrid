@@ -19,7 +19,7 @@ H:/DataWarehouse/
 DataLake/
 DataWarehouse/
 #ai4ohs-hybrid-monorepo/
-docs/
+docs/**
 
 # VS Code
 .vscode/.ropeproject/
