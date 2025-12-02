@@ -5,6 +5,7 @@ __pycache__/
 *.pyo
 *.pyd
 *.egg-info/
+.github/
 
 # Logs & caches
 logs/**
@@ -17,6 +18,8 @@ H:/DataLake/
 H:/DataWarehouse/
 DataLake/
 DataWarehouse/
+ai4ohs-hybrid-monorepo/
+docs/
 
 # VS Code
 .vscode/.ropeproject/
