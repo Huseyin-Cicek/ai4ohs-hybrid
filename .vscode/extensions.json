@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.black-formatter",
+    "ms-python.vscode-pylance",
+    "charliermarsh.ruff",
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "usernamehw.errorlens",
+    "bierner.markdown-preview-enhanced"
+  ]
+}

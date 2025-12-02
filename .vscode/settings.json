@@ -61,11 +61,6 @@
     "editor.formatOnSave": true
   },
 
-  // Ruff (lint + import düzenleme); format işini Black yapıyor
-  "ruff.enable": true,
-  "ruff.organizeImports": true,
-  "ruff.fixAll": false,
-
   // isort eklentisi yüklü ama Ruff import düzenlediği için pasif
   "isort.check": false,
 
@@ -101,6 +96,12 @@
     "markdown": false
   },
   "github.copilot.inlineSuggest.enable": true,
+  "github.copilot.chat.participateInChat": true,
+  "github.copilot.editor.enableAutoCompletions": true,
+  "github.copilot.advanced": {
+  "debug.testN": 3,
+  "debug.overrideProxyUrl": ""
+  },
 
   // Chat talimat dosyaları – sadece hafif docs yapısı
   "chat.instructionsFilesLocations": {
@@ -127,5 +128,22 @@
   // ── Misc utilities ───────────────────────────────────────────────────────────
   "todo-tree.tree.showScanModeButton": false,
   "trailing-spaces.deleteModifiedLinesOnly": true,
-  "resmon.autoStart": false
+  "resmon.autoStart": false,
+
+// ── Python Path & Import Sorunlarını %100 Çözmek İçin (EN ÖNEMLİ!)
+"python.analysis.extraPaths": ["${workspaceFolder}/src"],
+"terminal.integrated.env.windows": {
+  "PYTHONPATH": "${workspaceFolder}/src"
+},
+"terminal.integrated.env.linux": {
+  "PYTHONPATH": "${workspaceFolder}/src"
+},
+
+  // Ruff (lint + import düzenleme); format işini Black yapıyor
+"ruff.organizeImports": true,
+  "ruff.fixAll": false,
+  "ruff.enable": true,
+  "ruff.lint.enable": true,
+  "ruff.format.enable": false,   // Black format yapıyor, Ruff sadece lint yapsın
+  "black-formatter.args": ["--line-length=100"]
 }

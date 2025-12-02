@@ -16,18 +16,54 @@
       ],
       "cwd": "${workspaceFolder}",
       "envFile": "${workspaceFolder}/.env",
-      "justMyCode": true,
+      "justMyCode": false,
       "console": "integratedTerminal"
     },
     {
-      "name": "Run Pipeline 00→03",
+      "name": "Run 00_ingest",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/pipelines/00_ingest/run.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "Run 01_staging",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/pipelines/01_staging/run.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "Run 02_processing",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/pipelines/02_processing/run.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "Run 03_rag (Interactive Query)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/pipelines/03_rag/run.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "envFile": "${workspaceFolder}/.env",
+      "args": ["--interactive"]
+    },
+    {
+      "name": "Run All Pipelines (00→03)",
       "type": "python",
       "request": "launch",
       "program": "${workspaceFolder}/scripts/dev/run_all_pipelines.py",
-      "cwd": "${workspaceFolder}",
-      "envFile": "${workspaceFolder}/.env",
-      "justMyCode": true,
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "envFile": "${workspaceFolder}/.env"
     }
   ]
 }

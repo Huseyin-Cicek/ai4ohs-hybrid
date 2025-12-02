@@ -2,49 +2,53 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Run Pipelines 00→03",
+      "label": "Run Pipelines 00→03 (Safe & Sequential)",
       "type": "shell",
-      "command": "python src/pipelines/00_ingest/run.py && python src/pipelines/01_staging/run.py && python src/pipelines/02_processing/run.py && python src/pipelines/03_rag/run.py",
+      "command": "python",
+      "args": [
+        "${workspaceFolder}/scripts/dev/run_all_pipelines.py"
+      ],
       "group": {
         "kind": "build",
         "isDefault": true
       },
-      "options": {
-        "env": {
-          "PYTHONPATH": "${workspaceFolder}"
-        }
-      },
       "presentation": {
+        "echo": true,
         "reveal": "always",
-        "panel": "shared"
-      }
+        "panel": "shared",
+        "clear": true
+      },
+      "problemMatcher": []
     },
     {
-      "label": "Start API",
-      "type": "shell",
-      "command": "uvicorn src.ohs.api.main:app --reload --host 127.0.0.1 --port 8000",
-      "options": {
+    "label": "Start API",
+    "type": "shell",
+    "command": "uvicorn",
+    "args": [
+        "src.ohs.api.main:app",
+        "--reload",
+        "--host", "127.0.0.1",
+        "--port", "8000"
+    ],
+    "envFile": "${workspaceFolder}/.env",
+    "options": {
         "env": {
-          "PYTHONPATH": "${workspaceFolder}"
+        "PYTHONPATH": "${workspaceFolder}/src"
         }
-      },
-      "presentation": {
+    },
+    "presentation": {
         "reveal": "always",
         "panel": "shared"
-      }
+    }
     },
     {
       "label": "Run Full System Validation",
       "type": "shell",
       "command": "python scripts/dev/run_all_pipelines.py",
-      "group": {
-        "kind": "test",
-        "isDefault": false
-      },
-      "problemMatcher": [],
+      "group": "test",
       "options": {
         "env": {
-          "PYTHONPATH": "${workspaceFolder}"
+          "PYTHONPATH": "${workspaceFolder}/src"
         }
       },
       "presentation": {
