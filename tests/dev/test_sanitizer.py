@@ -1,7 +1,5 @@
 # Test file in tests/dev/test_sanitizer.py
-from pathlib import Path
 
-import pytest
 
 from scripts.dev.reorg_sanitizer import FileSanitizer
 

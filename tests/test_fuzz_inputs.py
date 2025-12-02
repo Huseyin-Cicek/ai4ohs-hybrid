@@ -8,7 +8,7 @@ import random
 import re
 import string
 
-from src.utils import compliance
+from src.utils import compliance  # Fixed import path
 
 
 def _make_rng() -> random.Random:

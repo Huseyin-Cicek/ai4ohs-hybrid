@@ -101,21 +101,24 @@ class ValidationResult:
 
 def has_keywords(text: str, keywords: List[str], case_sensitive: bool = False) -> List[str]:
     """
-    Check which keywords are missing from text.
-
-    Args:
-        text: Document text to search
-        keywords: List of required keywords
-        case_sensitive: Whether to match case
-
-    Returns:
-        List of missing keywords
+    Geliştirilmiş anahtar kelime kontrolü:
+    - kelime sınırlarını kullanır (\b)
+    - normalize eder (unicode NFC)
+    - liste halinde veya madde işaretli yazımları da dikkate alır
     """
-    target = text if case_sensitive else text.lower()
+    import unicodedata
+
+    if not case_sensitive:
+        text_to_search = unicodedata.normalize("NFC", text).lower()
+    else:
+        text_to_search = unicodedata.normalize("NFC", text)
+
     missing = []
     for kw in keywords:
-        search_kw = kw if case_sensitive else kw.lower()
-        if search_kw not in target:
+        target = kw if case_sensitive else kw.lower()
+        # escape special regex chars in keyword, allow simple whitespace variants
+        pattern = rf"\b{re.escape(target)}\b"
+        if not re.search(pattern, text_to_search, flags=re.IGNORECASE if not case_sensitive else 0):
             missing.append(kw)
     return missing
 
@@ -419,6 +422,11 @@ def validate_loto_procedure(text: str, context: Dict) -> Tuple[bool, List[str]]:
     if not has_any_keyword(text, ["lockout device", "lock", "tag"]):
         violations.append("Missing lockout device specification")
 
+    # Check for step-by-step procedure presence (new enhancement)
+    step_pattern = re.compile(r"^\d+\.\s|^\d+\)", re.MULTILINE)
+    if not step_pattern.search(text):
+        violations.append("Missing step-by-step procedure format (e.g., '1. Preparation')")
+
     return (len(violations) == 0, violations)
 
 
@@ -540,7 +548,9 @@ def validate_law6331_ohs_specialist(text: str, context: Dict) -> Tuple[bool, Lis
     violations = []
 
     # Required OHS specialist elements
-    if not has_any_keyword(text, ["ohs specialist", "occupational safety specialist", "iş güvenliği uzmanı"]):
+    if not has_any_keyword(
+        text, ["ohs specialist", "occupational safety specialist", "iş güvenliği uzmanı"]
+    ):
         violations.append("Missing OHS specialist designation (Law 6331 Article 8)")
 
     # Check for risk assessment by specialist

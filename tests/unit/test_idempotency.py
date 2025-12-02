@@ -1,7 +1,5 @@
 # filepath: tests/unit/test_idempotency.py
-from pathlib import Path
 
-import pytest
 
 from src.utils.stamps import read_stamp_or_epoch, write_stamp_atomic
 

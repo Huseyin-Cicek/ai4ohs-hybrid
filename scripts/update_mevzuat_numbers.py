@@ -2,13 +2,11 @@
 # Optimized for error handling, atomic writes, and performance.
 
 import argparse
-import json
 import time
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC

@@ -9,9 +9,14 @@ Responsibilities:
 
 from __future__ import annotations
 
-from pathlib import Path
-from datetime import datetime
 import subprocess
+import sys
+from datetime import datetime
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parents[2]
+sys.path.insert(0, str(project_root))
 
 
 class ZeusVoiceListener:
@@ -32,17 +37,28 @@ class ZeusVoiceListener:
 
     def _run_pipelines(self):
         self._log("COMMAND", "Running pipelines")
-        subprocess.run(["python", "scripts/dev/run_all_pipelines.py"])
+        try:
+            subprocess.run([sys.executable, "scripts/dev/run_all_pipelines.py"], check=True)
+        except subprocess.CalledProcessError as e:
+            self._log("ERROR", f"Pipeline run failed: {e}")
 
     def _start_api(self):
         self._log("COMMAND", "Starting API")
-        subprocess.run(["uvicorn", "src.ohs.api.main:app", "--reload"])
+        try:
+            subprocess.run(
+                [sys.executable, "-m", "uvicorn", "src.ohs.api.main:app", "--reload"], check=True
+            )
+        except subprocess.CalledProcessError as e:
+            self._log("ERROR", f"API start failed: {e}")
 
     def _format_code(self):
         self._log("COMMAND", "Formatting code")
-        subprocess.run(["ruff", "check", ".", "--fix"])
-        subprocess.run(["black", "."])
-        subprocess.run(["isort", "."])
+        try:
+            subprocess.run([sys.executable, "-m", "ruff", "check", ".", "--fix"], check=True)
+            subprocess.run([sys.executable, "-m", "black", "."], check=True)
+            subprocess.run([sys.executable, "-m", "isort", "."], check=True)
+        except subprocess.CalledProcessError as e:
+            self._log("ERROR", f"Formatting failed: {e}")
 
     def listen(self):
         print("Zeus Voice Listener started. Type 'exit' to quit.")

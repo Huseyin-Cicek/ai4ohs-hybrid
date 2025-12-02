@@ -367,6 +367,29 @@ class HealthChecker:
         else:
             return 3
 
+    def check_component(self, name: str, command: list) -> Dict:
+        try:
+            result = subprocess.run(command, capture_output=True, text=True, timeout=30)
+            status = "ok" if result.returncode == 0 else "error"
+            return {"status": status, "output": result.stdout, "error": result.stderr}
+        except Exception as e:
+            return {"status": "error", "error": str(e)}
+
+    def run_checks(self):
+        self.results["checks"]["pipelines"] = self.check_component(
+            "pipelines", [sys.executable, "scripts/dev/run_all_pipelines.py"]
+        )
+        self.results["checks"]["api"] = self.check_component(
+            "api", [sys.executable, "-m", "uvicorn", "--help"]
+        )
+        # Add more checks as needed
+
+    def generate_report(self, output_path: Path):
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with output_path.open("w") as f:
+            json.dump(self.results, f, indent=2)
+        print(f"Report saved to {output_path}")
+
 
 def main():
     """Main entry point with error handling."""
