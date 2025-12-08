@@ -31,7 +31,7 @@ class MLWorker:
 
         # Cache files (WRITE responsibility)
         self.last_run_file = self.project_root / "logs" / "dev" / "ml_worker_last_run.txt"
-        self.summary_file = self.project_root / "scripts" / "dev" / "zeus_ml_summary_example.json"
+        self.summary_file = self.project_root / "logs" / "dev" / "zeus_ml_summary.json"
 
         # Pipeline stages and staleness thresholds (hours)
         self.stages = [

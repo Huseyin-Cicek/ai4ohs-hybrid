@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "priority_order": ["ESS", "ISO45001", "OSHA", "TR6331"],
+  "mappings": [
+    {
+      "topic": "ppe",
+      "iso": ["8.1.3"],
+      "osha": ["1910.132", "1910.133", "1910.135"],
+      "ess": ["ESS2.2.1"],
+      "tr": ["TR6331-10", "TR6331-17"],
+      "strictest": "OSHA",
+      "notes": "PPE hazard assessment ve eğitim yükümlülüğü OSHA'da en ayrıntılı."
+    },
+    {
+      "topic": "confined_space",
+      "iso": ["8.1.1", "8.2"],
+      "osha": ["1910.146"],
+      "ess": ["ESS2.2.2"],
+      "tr": ["TR6331-4", "TR6331-5"],
+      "strictest": "OSHA",
+      "notes": "İzin, atmosfer ölçümü, kurtarma planı OSHA'da en detaylı."
+    },
+    {
+      "topic": "fall_protection",
+      "iso": ["8.1.1"],
+      "osha": ["1926.501"],
+      "ess": ["ESS2.2.2"],
+      "tr": ["TR6331-4"],
+      "strictest": "OSHA",
+      "notes": "Yüksekte çalışma için sınır ve ekipman zorunluluğu OSHA 1926.501'de net."
+    },
+    {
+      "topic": "emergency_preparedness",
+      "iso": ["8.2"],
+      "osha": ["1910.38"],
+      "ess": ["ESS4.1.2"],
+      "tr": ["TR6331-11"],
+      "strictest": "ESS",
+      "notes": "Toplum ve gelişmiş acil durum kapsamı ESS4'te geniş."
+    },
+    {
+      "topic": "risk_assessment",
+      "iso": ["6.1.2"],
+      "osha": ["1910.132(d)"],
+      "ess": ["ESS1.1", "ESS2.2.2"],
+      "tr": ["TR6331-10"],
+      "strictest": "ESS",
+      "notes": "Çevresel ve toplumsal etkiler ESS1/2'de zorunlu."
+    }
+  ]
+}

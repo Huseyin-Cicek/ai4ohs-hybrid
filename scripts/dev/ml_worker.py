@@ -13,11 +13,12 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List
 
-from src.config.settings import settings
-
-# Add project root to path
-project_root = Path(__file__).parents[2]
+# Add project root to path before local imports
+project_root = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(project_root))
+
+from src.agentic.memory.long_term_memory import LongTermMemory  # noqa: E402
+from src.config.settings import settings  # noqa: E402
 
 
 class MLWorker:
@@ -31,7 +32,8 @@ class MLWorker:
 
         # Cache files (WRITE responsibility)
         self.last_run_file = self.project_root / "logs" / "dev" / "ml_worker_last_run.txt"
-        self.summary_file = self.project_root / "scripts" / "dev" / "zeus_ml_summary_example.json"
+        self.summary_file = self.project_root / "logs" / "dev" / "zeus_ml_summary.json"
+        self.reg_sync_stamp = self.project_root / "logs" / "dev" / "regulations_sync.stamp"
 
         # Pipeline stages and staleness thresholds (hours)
         self.stages = [
@@ -130,6 +132,46 @@ class MLWorker:
         temp_file.write_text(json.dumps(summary, indent=2), encoding="utf-8")
         temp_file.replace(self.summary_file)
 
+    def _sync_regulations(self):
+        """Sync turkish_regulations.json (and future wb-ifc-ess) into long-term memory if updated."""
+        targets = [
+            ("turkish_regulations", self.project_root / "docs" / "compliance" / "turkish_regulations.json"),
+            ("wb_ifc_ess", self.project_root / "docs" / "compliance" / "wb_ifc_ess.json"),
+        ]
+        stamp_ts = datetime.fromtimestamp(0)
+        if self.reg_sync_stamp.exists():
+            try:
+                stamp_ts = datetime.fromisoformat(self.reg_sync_stamp.read_text(encoding="utf-8").strip())
+            except Exception:
+                stamp_ts = datetime.fromtimestamp(0)
+
+        mem = LongTermMemory()
+        updated_any = False
+
+        for name, path in targets:
+            if not path.exists():
+                continue
+            mtime = datetime.fromtimestamp(path.stat().st_mtime)
+            if mtime <= stamp_ts:
+                continue
+
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+                items = data.get("items", {}) if isinstance(data, dict) else {}
+                mem.memory.setdefault("regulations", {})[name] = {
+                    "last_synced": datetime.now().isoformat(),
+                    "registry_size": len(items),
+                    "path": str(path),
+                }
+                updated_any = True
+                self._log("INFO", f"Regulations synced: {name} ({len(items)} kayit)")
+            except Exception as exc:
+                self._log("ERROR", f"Regulations sync failed for {name}: {exc}")
+
+        if updated_any:
+            mem.save()
+            self.reg_sync_stamp.write_text(datetime.now().isoformat(), encoding="utf-8")
+
     def run(self):
         """Main worker execution."""
         self._log("INFO", "ML Worker started")
@@ -159,6 +201,9 @@ class MLWorker:
         # Update cache with results
         self._update_cache(tasks_completed, tasks_failed)
 
+        # Sync regulations knowledge into long-term memory if updated
+        self._sync_regulations()
+
         # Summary log
         if tasks_completed or tasks_failed:
             self._log(
@@ -166,14 +211,12 @@ class MLWorker:
                 f"Completed: {len(tasks_completed)}, Failed: {len(tasks_failed)}",
             )
             if tasks_completed:
-                print(f"\n✓ Completed pipelines: {', '.join(tasks_completed)}")
+                print(f'\n✓ Completed pipelines: {', '.join(tasks_completed)}')
             if tasks_failed:
-                print(f"\n✗ Failed pipelines: {', '.join(tasks_failed)}")
+                print(f'\n✗ Failed pipelines: {', '.join(tasks_failed)}')
         else:
             self._log("SUMMARY", "No stale pipelines detected")
-            print("\n✓ All pipelines are fresh, no execution needed")
-
-
+            print('\n✓ All pipelines are fresh, no execution needed')
 def main():
     """Main entry point."""
     worker = MLWorker()
@@ -182,3 +225,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

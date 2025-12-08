@@ -8,7 +8,7 @@ This is a **dual-mode (offline/online) Occupational Health & Safety intelligence
 
 The system follows a strict **Ingest → Staging → Processing → RAG** pipeline pattern:
 
-1. **00_ingest**: Raw document ingestion from `H:\DataLake\ai4ohs-hybrid-datasets-raw\00_sources`
+1. **00_ingest**: Raw document ingestion from `H:\DataLake\ai4hsse-raw\00_sources`
 2. **01_staging**: Text normalization and enrichment
 3. **02_processing**: Chunking, embedding generation, FAISS index building
 4. **03_rag**: Retrieval, reranking, and evaluation
@@ -19,8 +19,8 @@ Each pipeline stage logs execution stamps to `logs/pipelines/{stage_name}.stamp`
 
 ### Environment Variables (`.env`)
 
--   `RAW_ROOT`: Data Lake path (default: `H:\DataLake\ai4ohs-hybrid-datasets-raw`)
--   `CLEAN_ROOT`: Data Warehouse path (default: `H:\DataWarehouse\ai4ohs-datasets-clean`)
+-   `RAW_ROOT`: Data Lake path (default: `H:\DataLake\ai4hsse-raw`)
+-   `CLEAN_ROOT`: Data Warehouse path (default: `H:\DataWarehouse\ai4hsse-clean`)
 -   `OFFLINE_MODE`: Boolean (true = no cloud dependencies)
 -   `GPU_ACCELERATION`: Boolean for embedding/reranking
 -   `EMBEDDING_MODEL`: Default `sentence-transformers/all-MiniLM-L12-v2`
@@ -197,7 +197,7 @@ def listen_and_execute():
 
 **Key Features**:
 
--   Watches `H:\DataLake\ai4ohs-hybrid-datasets-raw\00_sources\_dropzone` for new files
+-   Watches `H:\DataLake\ai4hsse-raw\00_sources\_dropzone` for new files
 -   Sanitizes filenames (removes unsafe chars, enforces naming conventions)
 -   Routes files to appropriate subdirectories based on: MIME type, filename patterns, metadata
 -   Deduplicates using SHA-256 hashing (via `src/utils/hashing.py`)
@@ -1599,7 +1599,7 @@ Zeus components coordinate through **timestamp stamps** and **log files**:
 **State Files**:
 
 -   `scripts/dev/zeus_ml_summary_example.json`: ML Worker status summary
--   `H:\DataLake\ai4ohs-hybrid-datasets-raw\00_sources\.sanitizer_history.json`: Deduplication cache
+-   `H:\DataLake\ai4hsse-raw\00_sources\.sanitizer_history.json`: Deduplication cache
 
 #### State Management Architecture
 
@@ -2753,7 +2753,7 @@ Purpose: Track **persistent state** for deduplication and optimization
 **File Structure**:
 
 ```json
-// H:\DataLake\ai4ohs-hybrid-datasets-raw\00_sources\.sanitizer_history.json
+// H:\DataLake\ai4hsse-raw\00_sources\.sanitizer_history.json
 {
     "sha256:abc123...": {
         "original_path": "H:\\DataLake\\...\\_dropzone\\file.pdf",
@@ -3846,7 +3846,7 @@ def validate_file(file_path: Path):
 ```python
 # Writer Pattern (User/External System)
 # Simply drop files into monitored directory:
-# H:\DataLake\ai4ohs-hybrid-datasets-raw\00_sources\_dropzone\
+# H:\DataLake\ai4hsse-raw\00_sources\_dropzone\
 
 # Reader Pattern (File Sanitizer with Watchdog)
 from watchdog.observers import Observer

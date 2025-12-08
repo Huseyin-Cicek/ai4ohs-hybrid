@@ -1,6 +1,21 @@
+from .routers import datasets, guardrails, health, search
 from fastapi import FastAPI
 
-from .routers import datasets, guardrails, health, search
+"""Auto-refactored by ACE/FERS.
+This module was touched by the evolutionary refactor pipeline.
+"""
+
+
+"""Auto-refactored by ACE/FERS.
+This module was touched by the evolutionary refactor pipeline.
+"""
+
+
+"""Auto-refactored by ACE/FERS.
+This module was touched by the evolutionary refactor pipeline.
+"""
+
+
 
 app = FastAPI(title="AI4OHS-HYBRID API")
 

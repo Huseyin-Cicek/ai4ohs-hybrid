@@ -1,8 +1,13 @@
 from __future__ import annotations
-
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, List, Sequence
+
+"""Auto-refactored by ACE/FERS.
+This module was touched by the evolutionary refactor pipeline.
+"""
+
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 

@@ -1,0 +1,66 @@
+{
+  "version": "1.0.0",
+  "defaults": {
+    "offline": true,
+    "severity_order": ["critical", "major", "minor"],
+    "strictness_priority": ["ESS", "ISO45001", "OSHA", "TR6331"]
+  },
+  "rules": [
+    {
+      "rule_id": "TR6331-17-TRAINING",
+      "standard": "TR6331",
+      "clause": "17",
+      "category": "training",
+      "severity": "major",
+      "requirement": "Çalışanlara işe giriş ve periyodik OHS eğitimi verilmiş olmalı.",
+      "match": {
+        "keywords_any": ["eğitim", "oryantasyon", "işbaşı eğitimi", "periyodik eğitim"],
+        "must_have_numbers": false
+      },
+      "remediation": "Eğitim planını, içerik özetini ve katılım kayıtlarını ekle; tekrar periyodu belirt."
+    },
+    {
+      "rule_id": "OSHA-1910.146-CONFINED_SPACE",
+      "standard": "OSHA",
+      "clause": "1910.146",
+      "category": "confined_space",
+      "severity": "critical",
+      "requirement": "Permit-required confined space girişi için izin, atmosfer ölçümü, kurtarma planı zorunlu.",
+      "match": {
+        "keywords_all": ["permit", "atmospheric testing", "rescue", "communication"],
+        "regex_any": ["O2\\s*19\\.5-23\\.5", "LEL\\s*<\\s*10%"]
+      },
+      "remediation": "İzin formu, ölçüm sonuçları, kurtarma ekibi ve iletişim prosedürünü ekle."
+    },
+    {
+      "rule_id": "ISO45001-8.1.3-PPE",
+      "standard": "ISO45001",
+      "clause": "8.1.3",
+      "category": "ppe",
+      "severity": "major",
+      "requirement": "PPE gereksinimleri faaliyet bazında tanımlanmalı ve belgelendirilmeli.",
+      "match": {
+        "keywords_all": ["helm", "gözlük", "çelik burun", "reflektif", "eldiven"],
+        "context_tags_optional": ["excavation", "hot_work", "working_at_height"]
+      },
+      "remediation": "Faaliyet listesine göre PPE matrisi ekle; dağıtım ve kontrol kayıtlarını belirt."
+    },
+    {
+      "rule_id": "ESS2-2.2.1-OHS",
+      "standard": "ESS",
+      "clause": "ESS2.2.1",
+      "category": "ohs_management",
+      "severity": "major",
+      "requirement": "OHS risk değerlendirmesi, işçi katılımı ve şikayet mekanizması bulunmalı.",
+      "match": {
+        "keywords_all": ["risk assessment", "worker consultation", "grievance"],
+        "regex_any": ["(ISO\\s*45001)", "(OHSMS)"]
+      },
+      "remediation": "Risk değerlendirmesini, katılım kayıtlarını ve şikayet prosedürünü belgele; erişim kanallarını listele."
+    }
+  ],
+  "cross_refs": [
+    { "from": "ISO45001-8.1.3-PPE", "to": ["ESS2-2.2.1-OHS", "OSHA-1910.132"] },
+    { "from": "OSHA-1910.146-CONFINED_SPACE", "to": ["ESS2-2.2.2", "ISO45001-8.1.1"] }
+  ]
+}

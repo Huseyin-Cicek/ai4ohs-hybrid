@@ -1,0 +1,178 @@
+ace:
+  # Her koşuda kaç dosya üzerinde çalışılsın
+  max_files_per_run: 8          # 10 yerine 6–8 arası daha dengeli
+  # Testler pahalıysa burada sınır koyabilirsin (opsiyonel)
+  max_test_runtime_sec: 120
+
+  # Auto-merge için minimum arka arkaya başarılı koşu sayısı
+  auto_merge_threshold: 3
+
+  # Sandbox klasörü
+  sandbox_dir: "sandbox_repo"
+
+  # Llama server bağlantısı
+  llama_host: "127.0.0.1"
+  llama_port: 8080
+  llama_timeout_sec: 40
+
+  # FERS entegrasyonu
+  use_fers: true
+  fers_profile: "FAST_SAFE"   # FAST_SAFE / BALANCED / DEEP
+
+fers:
+  # Llama.cpp token bütçeleri
+  max_prompt_tokens: 1200        # ctx 4096 için güvenli
+  max_completion_tokens: 512     # patch json + minimal açıklama
+  hard_ctx_limit: 4096           # Llama server ile aynı tutulmalı
+
+  # Dosya/ fonksiyon ölçeği
+  max_files_per_batch: 8
+  max_functions_per_file: 12
+
+  # Fonksiyon boyut eşiği (token tahmini)
+  skip_large_function_tokens: 1200   # >1200 ise “skip function …” logu
+
+  # Evrim ağırlıkları (başarıya göre agresiflik artışı)
+  base_evolution_weight: 1.0
+  evolution_increment_on_success: 0.15
+  evolution_decrement_on_fail: 0.25
+  evolution_weight_min: 0.7
+  evolution_weight_max: 2.0
+
+  # Refactor modları için threshold’lar
+  small_patch_max_tokens: 350        # hızlı, docstring/typing/PEP8
+  function_chunk_max_tokens: 900     # tek fonksiyon/blok refactor
+  aggressive_min_tokens: 900         # daha büyük ama dikkatli refactor
+
+  # Minimal patch garantisi
+  enforce_minimal_patch: true        # her koşuda en az küçük bir iyileştirme
+  minimal_patch_types:
+    - "add_or_improve_docstring"
+    - "add_return_type_annotations"
+    - "fix_obvious_style_issues"
+    - "improve_logging_guard"
+
+  # Llama kaynak kullanımı
+  parallel_llama_calls: 2            # RTX 3070 Ti için 2–3 ideal
+  throttle_sleep_ms: 200             # aşırı istekten kaçınmak için hafif bekleme
+
+fers_profile: "FAST_SAFE"
+fers:
+  max_prompt_tokens: 800
+  max_completion_tokens: 256
+  max_files_per_batch: 5
+  skip_large_function_tokens: 900
+
+  small_patch_max_tokens: 300
+  function_chunk_max_tokens: 700
+  aggressive_min_tokens: 1100
+
+  base_evolution_weight: 0.9
+  evolution_increment_on_success: 0.05
+  evolution_decrement_on_fail: 0.10
+  evolution_weight_min: 0.7
+  evolution_weight_max: 1.2
+
+  enforce_minimal_patch: true
+  parallel_llama_calls: 1
+
+fers_profile: "BALANCED"
+fers:
+  max_prompt_tokens: 1200
+  max_completion_tokens: 512
+  max_files_per_batch: 8
+  skip_large_function_tokens: 1200
+
+  small_patch_max_tokens: 350
+  function_chunk_max_tokens: 900
+  aggressive_min_tokens: 900
+
+  base_evolution_weight: 1.0
+  evolution_increment_on_success: 0.15
+  evolution_decrement_on_fail: 0.25
+  evolution_weight_min: 0.7
+  evolution_weight_max: 2.0
+
+  enforce_minimal_patch: true
+  parallel_llama_calls: 2
+
+fers_profile: "DEEP"
+fers:
+  max_prompt_tokens: 1800
+  max_completion_tokens: 900
+  max_files_per_batch: 12
+  skip_large_function_tokens: 1800
+
+  small_patch_max_tokens: 500
+  function_chunk_max_tokens: 1400
+  aggressive_min_tokens: 700
+
+  base_evolution_weight: 1.2
+  evolution_increment_on_success: 0.30
+  evolution_decrement_on_fail: 0.20
+  evolution_weight_min: 1.0
+  evolution_weight_max: 3.0
+
+  enforce_minimal_patch: true
+  parallel_llama_calls: 3
+
+global_profile: "BALANCED"   # FAST_SAFE | BALANCED | DEEP
+
+profiles:
+
+  FAST_SAFE:
+    ace:
+      max_files_per_run: 5
+    fers:
+      max_prompt_tokens: 800
+      max_completion_tokens: 256
+      max_files_per_batch: 5
+      skip_large_function_tokens: 900
+      small_patch_max_tokens: 300
+      function_chunk_max_tokens: 700
+      aggressive_min_tokens: 1100
+      base_evolution_weight: 0.9
+      evolution_increment_on_success: 0.05
+      evolution_decrement_on_fail: 0.10
+      evolution_weight_min: 0.7
+      evolution_weight_max: 1.2
+      parallel_llama_calls: 1
+      enforce_minimal_patch: true
+
+  BALANCED:
+    ace:
+      max_files_per_run: 8
+    fers:
+      max_prompt_tokens: 1200
+      max_completion_tokens: 512
+      max_files_per_batch: 8
+      skip_large_function_tokens: 1200
+      small_patch_max_tokens: 350
+      function_chunk_max_tokens: 900
+      aggressive_min_tokens: 900
+      base_evolution_weight: 1.0
+      evolution_increment_on_success: 0.15
+      evolution_decrement_on_fail: 0.25
+      evolution_weight_min: 0.7
+      evolution_weight_max: 2.0
+      parallel_llama_calls: 2
+      enforce_minimal_patch: true
+
+  DEEP:
+    ace:
+      max_files_per_run: 12
+    fers:
+      max_prompt_tokens: 1800
+      max_completion_tokens: 900
+      max_files_per_batch: 12
+      skip_large_function_tokens: 1800
+      small_patch_max_tokens: 500
+      function_chunk_max_tokens: 1400
+      aggressive_min_tokens: 700
+      base_evolution_weight: 1.2
+      evolution_increment_on_success: 0.30
+      evolution_decrement_on_fail: 0.20
+      evolution_weight_min: 1.0
+      evolution_weight_max: 3.0
+      parallel_llama_calls: 3
+      enforce_minimal_patch: true

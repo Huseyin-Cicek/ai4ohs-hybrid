@@ -1,6 +1,11 @@
+from .settings import settings
 from pathlib import Path
 
-from .settings import settings
+"""Auto-refactored by ACE/FERS.
+This module was touched by the evolutionary refactor pipeline.
+"""
+
+
 
 RAW_ROOT = Path(settings.RAW_ROOT).expanduser()
 CLEAN_ROOT = Path(settings.CLEAN_ROOT).expanduser()

@@ -1,0 +1,40 @@
+workflow:
+  pipeline:
+    - rag_retrieve
+    - hsse_reasoner
+    - cag_validator
+    - self_evaluation
+    - optional_rewrite
+    - ace_signal_emitter
+
+  rag_retrieve:
+    instruction: |
+      Fetch top_k embeddings before reasoning.
+      If retrieval fails → reply BASED_ON_KNOWN_STANDARDS + FLAG_NO_RAG_DATA.
+
+  hsse_reasoner:
+    instruction: |
+      Apply deterministic HSSE reasoning.
+      Compare TR 6331, OSHA, ISO 45001, WB/IFC ESS → choose STRICTEST.
+
+  cag_validator:
+    instruction: |
+      Validate output for:
+        - compliance completeness
+        - absence of unsafe recommendations
+        - law/standard citation correctness
+
+      If violation detected → rewrite automatically.
+
+  self_evaluation:
+    instruction: |
+      Score answer:
+        correctness, compliance, clarity, structure, risk_accuracy.
+      If < threshold → rewrite answer.
+
+  ace_signal_emitter:
+    emits:
+      - REQUEST_REFACTOR
+      - REQUEST_SCHEMA_UPDATE
+      - REQUEST_PROMPT_REWRITE
+      - PATCH_RECOMMENDATION

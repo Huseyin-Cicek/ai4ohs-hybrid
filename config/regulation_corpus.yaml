@@ -1,0 +1,35 @@
+version: "1.0.0"
+
+knowledge_root: "knowledge"
+
+datasets:
+  regulations_tr:
+    path: "knowledge/regulations_tr"
+    tags: ["TR6331", "regulation", "ohs"]
+  osha:
+    path: "knowledge/regulations_tr"  # OSHA/diğer kaynaklar için ayrı klasör ekleyebilirsiniz
+    tags: ["OSHA", "1910", "1926"]
+  iso:
+    path: "knowledge/iso_standards"
+    tags: ["ISO45001", "ISO14001"]
+  ifc_ess:
+    path: "knowledge/ifc_ess"
+    tags: ["ESS", "IFC"]
+  procedures:
+    path: "knowledge/procedures"
+    tags: ["SOP", "SWP", "PTW"]
+
+ingestion:
+  allowed_extensions: [".md", ".txt"]
+  min_chunk_chars: 300
+  max_chunk_chars: 1500
+  preserve_headings: true
+
+output_manifests:
+  chunks_manifest: "data/embeddings/regulation_chunks.json"
+  faiss_index: "data/embeddings/faiss_index.bin"
+  metadata: "data/embeddings/metadata.json"
+
+notes: |
+  Bu dosya, regülasyon korpusunun RAG/CAG ingest konumlarını tek noktadan yönetmek içindir.
+  Yol değişikliklerini buradan yapıp loader/pipeline’larda aynı referansı kullanın.

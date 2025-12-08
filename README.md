@@ -1,294 +1,124 @@
-# AI4OHS-HYBRID — Dual-Mode OHS Intelligence Engine
+# AI4OHS-HYBRID - Agentic HSSE/OHS Intelligence System
 
-**RAG + CAG + Compliance Guardrails + Offline/Online Execution + Local Automations (Zeus Layer)**
-AI4OHS-HYBRID, yüksek uyumluluk gerektiren altyapı projeleri (World Bank / IFC ESS, ISO 45001, OSHA, Türk 6331 Sayılı Kanun ve ilgili yönetmelikler) için tasarlanmış **tamamen yerel çalışabilir (offline-first)** bir OHS bilgi sistemi ve otomasyon platformudur.
+## Overview
 
-Platform; ETL → Staging → Processing → RAG → CAG → Automation akışını uçtan uca yönetir ve tüm OHS/HSSE dokümantasyonunu tek bir bütünleşik yapıda işler.
+AI4OHS-HYBRID is an offline-first OHS intelligence engine that combines:
 
----
+- Agentic AI (PLAN -> ACT -> REFLECT -> CORRECT -> LEARN)
+- RAG (Retrieval-Augmented Generation) with FAISS
+- CAG (Compliance-Augmented Guardrails)
+- Guarded inference (system prompt + SelfEvaluator/RewriteFlow)
+- Llama.cpp local inference
+- ML pipelines (risk prediction, incident classification)
+- Annual & quarterly automated OHS reporting
+- Zeus Voice Interface (offline)
 
-# 1. General Overview
-
-AI4OHS-HYBRID aşağıdaki beş ana katmandan oluşur:
-
-| Layer                                     | Description                                                                                           |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| **RAG – Retrieval-Augmented Generation**  | FAISS tabanlı lokal vektör arama motoru. Tüm OHS/EHS verisi offline erişilebilir.                     |
-| **CAG – Compliance-Augmented Generation** | ISO 45001, ISO 14001, OSHA 29 CFR, Türk 6331 Kanunu ve WB/IFC ESS için rule-based validasyon sistemi. |
-| **ETL Pipelines**                         | 00_ingest → 01_staging → 02_processing → 03_rag süreçleriyle embedding + index üretimi.               |
-| **Zeus Automation Layer**                 | Voice-trigger (“Hey Zeus”), FFMP, background workers.                                                 |
-| **Dual Execution Mode**                   | İnternet bağlantısız %100 offline veya cloud destekli online çalışma.                                 |
-
-## Core Features
-
--   Offline-first RAG search (FAISS)
--   CAG rule engine with deterministic validation
--   Python 3.11.9 full support
--   GPU-accelerated semantic search (CUDA 12.x)
--   Automated ingestion & chunking
--   Voice-assisted automation (Zeus Listener)
--   OHS/HSSE compliance enforcement
--   VSCode-integrated pipelines
--   Deterministic environment with pinned requirements
+Optimized for:
+- Turkish OHS law (6331 + regulations)
+- ISO 45001
+- OSHA 29 CFR
+- WB/IFC ESS1-ESS10
+- High-compliance infra projects (e.g., TERRP)
 
 ---
 
-# 2. Repository Structure
+## Directory Structure (Core Components)
 
 ```
-AI4OHS-HYBRID/
-├── src/
-│   ├── pipelines/
-│   ├── ohs/api/
-│   └── utils/
-├── scripts/
-│   ├── dev/
-│   ├── tools/
-│   └── offline_hooks/
-├── docs/
-│   ├── ai4ohs_overview.md
-│   ├── perf_stability_quickstart.md
-│   ├── dev_env_quickstart.md
-│   ├── compliance/
-│   ├── data/
-│   ├── automation/
-│   └── background/
-├── logs/
-├── DataLake/
-├── DataWarehouse/
-├── .vscode/
-├── requirements.txt
-├── .env
-└── README.md
-```
-
----
-
-# 3. Pipelines & API Usage
-
-## 3.1 Full ETL Pipeline Execution
-
-```powershell
-python src/pipelines/00_ingest/run.py
-python src/pipelines/01_staging/run.py
-python src/pipelines/02_processing/run.py
-python src/pipelines/03_rag/run.py
-```
-
-Tek komut:
-
-```powershell
-python scripts/dev/run_all_pipelines.py
-```
-
-## 3.2 Start Local API
-
-```powershell
-uvicorn src.ohs.api.main:app --reload --host 127.0.0.1 --port 8000
+src/
+  agentic/
+    planner_optimized.py
+    self_evaluator.py
+    self_eval_rewrite_flow.py
+    guarded_inference.py
+    task_graphs/
+      annual_report_task_graph.py
+  agents/
+    annual_report_agent.py
+  ai_ml/
+    incident/incident_classifier.py
+    risk_scoring/
+      hazard_vectorizer.py
+      risk_forecast_model.py
+      risk_pipeline.py
+    reporting/
+      ohs_kpi_dashboard.py
+      annual_ohs_report_generator.py
+      integrated_kpi_risk_dashboard.py
+      advanced_dashboard.py
+  governance/
+    audit_logger.py
+    compliance_heatmap.py
+    cag_rules_engine.py
+  genai/rag/
+    document_loader.py
+    ocr_ingest.py
+    chunker.py
+  zeus_layer/
+    listener.py
+    startup_tasks.py
+scripts/
+  run_guarded_llama.py
+  run_autonomy_cycle.py
 ```
 
 ---
 
-# 4. Offline / Online Configuration
+## Key Components
 
-| Variable                | Description              |
-| ----------------------- | ------------------------ |
-| `OFFLINE_MODE=true`     | İnternet olmadan çalışır |
-| `GPU_ACCELERATION=true` | CUDA varsa hızlanır      |
-| `EMBEDDING_MODEL`       | all-MiniLM-L12-v2        |
-| `RERANKER_MODEL`        | ms-marco-MiniLM-L-6-v2   |
-
----
-
-# 5. Developer Tools (Zeus Layer)
-
-### Zeus Listener
-
--   Hey Zeus ile tetiklenebilir
--   Pipelines çalıştırır
--   Status bildirimi yapar
-
-### Auto ML Worker
-
--   Yeni dokümanları normalize eder
--   TF-IDF + cluster summary üretir
--   `logs/dev/zeus_ml_summary.json`
-
-### FFMP
-
--   File normalization
--   Duplicate detection
--   Backup management
-
----
-
-# 6. Compliance / Guardrails (CAG Layer)
-
-### Validations
-
--   ISO 45001 / ISO 14001
--   OSHA 29 CFR
--   Türk 6331 Kanunu
--   Dünya Bankası ESS1–ESS10
-
-### Features
-
--   Regex + keyword + structural rule engine
--   LLM-free deterministic validation
--   Severity scoring
--   Non-compliant öneri bloklama
-
----
-
-# 7. Contributing & Git Rules
-
-### Allowed
-
--   `src/*`
--   `scripts/*`
--   `docs/*`
-
-### Forbidden
-
--   `logs/`
--   `DataLake/`
--   `.env`, `.env.local`
--   Model weights
-
-### Commit Format
-
-```
-feat:
-fix:
-docs:
-refactor:
-pipeline:
-api:
+### 1. Agentic Task Graph for Annual Reports
+`src/agentic/task_graphs/annual_report_task_graph.py`
+- DAG steps: load incidents -> load ESS/6331 -> compute KPI -> heatmap -> Word+Excel -> validate.
+```python
+from agentic.task_graphs.annual_report_task_graph import AnnualReportTaskGraph
+result = AnnualReportTaskGraph().execute()
 ```
 
----
+### 2. Integrated KPI + Risk Dashboard
+- Combines TRIR/LTIFR/Severity + ML risk forecast (`integrated_kpi_risk_dashboard.py`).
 
-# 8. Development Environment
+### 3. Risk Pipeline
+`UnifiedRiskPipeline` merges incident classification + hazard vectorization + ML risk forecast (XGBoost/MLP).
 
-### Python 3.11.9 Recommended
+### 4. Annual Report Generator
+Creates Word/Excel and KPI PNG (`ai_ml/reporting/annual_ohs_report_generator.py`).
 
-### Create venv
+### 5. Zeus Offline Voice Interface
+Keyword triggers pipelines (`zeus_layer/listener.py`).
 
-```powershell
-py -3.11 -m venv .venv
-.\.venv\Scripts\activate
-pip install -r requirements.txt
-```
+### 6. Self-Evaluation Rewrite Loop
+`RewriteFlow` + `SelfEvaluator` auto-rewrites low-scoring outputs.
 
-### VSCode Integration
+### 7. Guarded Inference (OHS Expert Persona)
+- System prompt + guardrails + RAG context: `scripts/run_guarded_llama.py`
+- Self-eval/auto-rewrite: `--self-eval --threshold 0.8`
+- Prompt builder: `src/genai/prompting/ohs_prompt_builder.py`
+- Llama client with ctx/timeout/retry: `src/agentic/llama_learning_integration/llama_client.py`
 
--   Ruff + Black format
--   Minimap off
--   Heavy watchers disabled
+### 8. OCR -> RAG Ingest
+- OCR-capable loader for images/PDF/docx: `src/genai/rag/document_loader.py`
+- Direct OCR helper: `src/genai/rag/ocr_ingest.py`
+- Plug screenshots into RAG ingest to “learn” from the screen.
 
----
-
-# 9. Requirements Summary
-
-### Includes
-
--   FAISS
--   Transformers + Sentence-Transformers
--   Torch CUDA stack
--   NLP/RAG utils
--   FastAPI / Uvicorn
--   Dev tools (Black, Ruff, Pytest)
-
-Install:
-
-```powershell
-pip install -r requirements.txt --index-url https://download.pytorch.org/whl/cu121
-```
+### 9. Autonomous Cycle (Proposals)
+- `scripts/run_autonomy_cycle.py`: SelfPlanning -> ACE dry-run -> SelfHealing -> SelfEvolving -> Approval queue (`AUTONOMY_CYCLE`).
+- ACE/FERS writes to main repo only after ApprovalManager approval (`ACE_ALLOW_AUTO_APPLY` env to bypass; not recommended).
 
 ---
 
-# 10. FAISS Index Architecture
+## Data Requirements
 
-```
-DataWarehouse/ai4hsse-clean/faiss/
-├── index.faiss
-├── index.pkl
-├── metadata.json
-└── embeddings/
-```
-
-Rebuild triggers:
-
--   New regulations
--   New incidents
--   Model update
--   Hash mismatch
+`data/analytics/` must contain:
+- `incidents_annual.json`
+- `ess_6331_items.json`
 
 ---
 
-# 11. Secrets Management
+## Output Standards
 
-Never commit:
-
-```
-.env
-.env.local
-secrets/
-logs/
-DataLake/
-DataWarehouse/
-```
-
-Encrypted using:
-
--   DPAPI + Fernet
-
----
-
-# 12. System Health
-
--   API: `/health`
--   Worker: `logs/health.json`
--   Zeus markers: ok / degraded / down
-
----
-
-# 13. Roadmap
-
--   Multi-index RAG
--   Offline YOLO hazard detection
--   Expanded CAG registry
--   Autonomous worker execution
-
----
-
-# 14. License
-
-Internal proprietary AI4OHS-HYBRID system.
-
----
-
-# 15. Contact
-
-AI4OHS-HYBRID System Architect
-
-Specialized Competencies
-
--   Occupational Health & Safety (OHS / HSSE) system design
--   World Bank / IFC ESS safeguard integration
--   ISO 45001 & ISO 14001 compliant management systems
--   Risk & compliance assessment for large-scale infrastructure projects
--   RAG + CAG hybrid AI safety engines
--   Offline-first data pipelines & FAISS vector indexing
--   Python + VSCode + GPU-accelerated ML workflows
--   Field-level safety operations & incident analysis integration
-
-Role in the AI4OHS-HYBRID Project
-
--   End-to-end architecture design
--   Compliance-driven guardrail model development
--   ETL & data governance framework
--   System performance & stability optimization
--   Zeus Automation Layer conceptual design
--   Standards, regulatory mapping, and HSSE dataset structuring
--   Full dual-mode (offline/online) operational design
+All outputs must include:
+- Safety-first hierarchy
+- Compliance mapping (6331 / ISO 45001 / WB ESS)
+- Residual risk assessment
+- CAPA / Preventive actions
+- Strictest rule wins; state uncertainty if data is missing

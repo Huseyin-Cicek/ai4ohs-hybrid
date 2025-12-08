@@ -1,3 +1,13 @@
+from __future__ import annotations
+from datetime import datetime
+from pathlib import Path
+from src.utils.stamps import write_stamp_atomic  # noqa: E402
+import sys
+
+"""Auto-refactored by ACE/FERS.
+This module was touched by the evolutionary refactor pipeline.
+"""
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
@@ -10,11 +20,7 @@ hem de:
 şeklinde çağrıldığında çalışacak şekilde tasarlanmıştır.
 """
 
-from __future__ import annotations
 
-import sys
-from datetime import datetime
-from pathlib import Path
 
 CURRENT_FILE = Path(__file__).resolve()
 # .../src/pipelines/01_staging/run.py
@@ -27,7 +33,6 @@ PROJECT_ROOT = CURRENT_FILE.parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.utils.stamps import write_stamp_atomic  # noqa: E402
 
 STAGE_NAME = "01_staging"
 

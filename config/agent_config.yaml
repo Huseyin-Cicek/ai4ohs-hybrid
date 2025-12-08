@@ -1,0 +1,54 @@
+version: "2.0"
+
+default_agent: "ai4ohs_hybrid_agent"
+
+agents:
+  ai4ohs_hybrid_agent:
+    description: "AgenticAI + RAG + CAG + Learning HSSE/OHS Specialist"
+    enabled: true
+
+    modules:
+      planner: "src/agentic/planner.py"
+      self_reflection: "src/agentic/self_reflection.py"
+      scheduler: "src/agentic/scheduler.py"
+      memory_short: "src/agentic/memory/short_term_memory.py"
+      memory_long: "src/agentic/memory/long_term_memory.py"
+      rollback: "src/agentic/rollback_mechanisms.py"
+      goal_manager: "src/agentic/goal_manager.py"
+      regulation_corpus_config: "config/regulation_corpus.yaml"
+
+    toolset:
+      rag_retriever: "src/genai/rag/retrievers/"
+      rag_pipelines: "src/genai/rag/pipelines/"
+      checklist_tools: "src/agents/tools/checklist_tools.py"
+      report_tools: "src/agents/tools/report_tools.py"
+      incident_tools: "src/agents/tools/incident_db_tools.py"
+      notification_tools: "src/agents/tools/notification_tools.py"
+
+    governance:
+      cagr_engine: "src/governance/cag_rules_engine.py"
+      safety_filters: "src/governance/safety_filters.py"
+      policy_enforcer: "src/governance/policy_enforcer.py"
+      audit_logger: "src/governance/audit_logger.py"
+
+    llama_profile:
+      bind_to_system_prompt: true
+      parameters_ref: "system_prompts.yaml:ai4ohs_hybrid_local_llama.llama_parameters"
+
+    behavior:
+      strictest_rule_wins: true
+      deterministic: true
+      avoid_sensitive_data: true
+      require_rag_evidence: true
+      require_compliance_map: true
+      include_learning_phase: true
+
+  annual_report_agent:
+    description: "Annual OHS Report Agent (KPI + ESS/6331)"
+    enabled: true
+    entrypoint: "src/agents/annual_report_agent.py:run_annual_report_agent"
+
+  self_planner:
+    description: "Self-Planning Mode for dynamic task graph generation"
+    enabled: true
+    entrypoint: "src/agentic/self_planning_mode.py:SelfPlanningMode.run"

@@ -1,0 +1,10 @@
+{
+  "ruleset_version": "1.0.0",
+  "rules": [
+    {
+      "path": "src/cag/rules/rules_example.json",
+      "sha256": "13fd0b053e7ad4380443e9e351166afd6cff48069480ebba0022287935e6b50d"
+    }
+  ],
+  "ruleset_sha256": "d2a1a1cb0662d40bdb40379bc1b5071e8b66c5bded599ab5c34dba02184e3d06"
+}

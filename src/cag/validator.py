@@ -50,7 +50,7 @@ _MANIFEST_PATH = Path(__file__).resolve().parent / "rules" / "manifest.json"
 # This value is replaced during the build/update process and must match the
 # canonical hash of the manifest payload (excluding the ``ruleset_sha256``
 # field itself). It acts as a tamper-evident seal for the rulepack.
-_EXPECTED_RULESET_SHA256 = "__RULESET_SHA256__"
+_EXPECTED_RULESET_SHA256 = "d2a1a1cb0662d40bdb40379bc1b5071e8b66c5bded599ab5c34dba02184e3d06"
 
 
 def _project_root() -> Path:

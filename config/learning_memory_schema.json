@@ -1,0 +1,32 @@
+{
+  "version": "2.0",
+  "fields": {
+    "user_preferences": {
+      "language": "string",
+      "tone": "string",
+      "structure": "array"
+    },
+    "project_context": {
+      "contractors": "array",
+      "sites": "array",
+      "recurring_hazards": "array",
+      "common_nonconformities": "array"
+    },
+    "templates": {
+      "reports": "array",
+      "checklists": "array",
+      "ptw_forms": "array"
+    },
+    "regulation_notes": {
+      "type": "array"
+    },
+    "corrections_log": {
+      "type": "array"
+    }
+  },
+  "rules": {
+    "no_sensitive_data": true,
+    "strict_update_on_user_feedback": true,
+    "procedural_learning_only": true
+  }
+}

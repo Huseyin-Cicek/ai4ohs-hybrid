@@ -1,0 +1,61 @@
+version: "1.0.0"
+
+embedding_model:
+  name: "sentence-transformers/all-MiniLM-L12-v2"
+  device: "auto"       # "cuda", "cpu", "mps"
+  batch_size: 64
+
+vector_store:
+  type: "faiss"
+  index_file: "data/embeddings/faiss_index.bin"
+  metadata_store: "data/embeddings/metadata.json"
+  normalize_embeddings: true
+
+retrieval:
+  top_k_primary: 12       # ilk ham sonuç
+  top_k_final: 6          # rerank sonrası kullanılan
+  score_threshold: 0.35   # çok alakasız dokümanları at
+  min_chunk_char_length: 300
+  max_chunk_char_length: 1500
+  prefer_recent_documents: true
+
+reranker:
+  enabled: true
+  model_name: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+  top_k: 6
+
+# Regülasyon korpusu kökleri (RAG ingest için)
+corpus_roots:
+  knowledge_root: "knowledge"
+  regulation_sets:
+    - "knowledge/regulations_tr"
+    - "knowledge/iso_standards"
+    - "knowledge/ifc_ess"
+    - "knowledge/procedures"
+
+filters:
+  default:
+    exclude_dirs:
+      - "logs/"
+      - "tmp/"
+    allowed_extensions: [".pdf", ".docx", ".txt", ".md"]
+  hsse_only:
+    include_tags: ["OHS", "HSSE", "IFC_ESS", "ISO45001"]
+
+pipelines:
+  incident_analysis:
+    retriever_profile: "hsse_only"
+    top_k_primary: 15
+    top_k_final: 8
+  gap_analysis:
+    retriever_profile: "hsse_only"
+    top_k_primary: 20
+    top_k_final: 10
+  reporting:
+    retriever_profile: "default"
+    top_k_primary: 12
+    top_k_final: 6
+
+offline_mode:
+  enabled: true
+  allow_remote_fallback: false

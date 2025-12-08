@@ -1,7 +1,0 @@
-*.whl
-*.tar.gz
-*.zip
-
-# Allow checksum and manifest files to be versioned
-!checksums.sha256
-!README.md
