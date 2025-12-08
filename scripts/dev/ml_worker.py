@@ -211,12 +211,12 @@ class MLWorker:
                 f"Completed: {len(tasks_completed)}, Failed: {len(tasks_failed)}",
             )
             if tasks_completed:
-                print(f'\n✓ Completed pipelines: {', '.join(tasks_completed)}')
+                print(f"\n✓ Completed pipelines: {', '.join(tasks_completed)}")
             if tasks_failed:
-                print(f'\n✗ Failed pipelines: {', '.join(tasks_failed)}')
+                print(f"\n✗ Failed pipelines: {', '.join(tasks_failed)}")
         else:
             self._log("SUMMARY", "No stale pipelines detected")
-            print('\n✓ All pipelines are fresh, no execution needed')
+            print("\n✓ All pipelines are fresh, no execution needed")
 def main():
     """Main entry point."""
     worker = MLWorker()

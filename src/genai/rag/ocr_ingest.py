@@ -35,7 +35,7 @@ def ocr_image_to_text(image_path: str) -> str:
 
     if pytesseract is None or Image is None:
         raise OCRUnavailable(
-            f"pytesseract/Pillow gerekli ancak eksik: {_IMPORT_ERROR!s if _IMPORT_ERROR else ''}"
+            f"pytesseract/Pillow gerekli ancak eksik: {str(_IMPORT_ERROR) if _IMPORT_ERROR else ''}"
         )
 
     path = Path(image_path)

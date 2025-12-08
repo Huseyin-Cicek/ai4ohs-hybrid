@@ -1,7 +1,16 @@
 import os
-import markdownify
-import mammoth
-from pdfminer.high_level import extract_text
+try:
+    import markdownify  # type: ignore
+except ImportError:  # pragma: no cover - optional dependency
+    markdownify = None
+try:
+    import mammoth  # type: ignore
+except ImportError:  # pragma: no cover - optional dependency
+    mammoth = None
+try:
+    from pdfminer.high_level import extract_text  # type: ignore
+except ImportError:  # pragma: no cover - optional dependency
+    extract_text = None
 
 from genai.rag.ocr_ingest import ocr_image_to_text
 
@@ -19,9 +28,13 @@ def load_document(filepath: str) -> str:
             return f.read()
 
     if ext == ".pdf":
+        if extract_text is None:
+            raise RuntimeError("pdfminer.six dependency missing for PDF extraction.")
         return extract_text(filepath)
 
     if ext in {".docx", ".doc"}:
+        if mammoth is None or markdownify is None:
+            raise RuntimeError("mammoth/markdownify dependencies missing for doc/docx conversion.")
         with open(filepath, "rb") as f:
             result = mammoth.convert_to_html(f)
             return markdownify.markdownify(result.value)

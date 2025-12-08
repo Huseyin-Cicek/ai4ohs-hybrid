@@ -27,12 +27,17 @@ CURRENT_FILE = Path(__file__).resolve()
 # parents[2] = src
 # parents[3] = project root
 PROJECT_ROOT = CURRENT_FILE.parents[3]
+SRC_ROOT = PROJECT_ROOT / "src"
 
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
 # Artık "src" paketi import edilebilir
 from src.utils.stamps import write_stamp_atomic  # noqa: E402
+from src.utils.path_sanitize import sanitize_path  # noqa: E402
+from src.utils.io_safe import read_text_safe  # noqa: E402
 
 STAGE_NAME = "00_ingest"
 
@@ -45,6 +50,11 @@ def main() -> None:
     # logs/pipelines klasörünü proje köküne göre tanımla
     stamp_dir = PROJECT_ROOT / "logs" / "pipelines"
     stamp_dir.mkdir(parents=True, exist_ok=True)
+
+    # İnce RAG-ingest uyumu: sanitize + clean helper'larını hazırla (no-op örnek)
+    sample_path = sanitize_path("data/raw/sample.txt")
+    # Basit okuma; gerçek temizleme mantığı ingest pipeline'ında uygulanmalıdır.
+    _ = read_text_safe(sample_path) if Path(sample_path).exists() else ""
 
     # Buraya 00_ingest'in gerçek iş mantığını ekleyebilirsin.
     # Şu an sadece atomic bir stamp üretiyor.

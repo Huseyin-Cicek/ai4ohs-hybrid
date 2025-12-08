@@ -91,7 +91,7 @@ class CAGRulesEngine:
     def get_cross_refs(self) -> List[Dict]:
         return self._load_json(self.rules_path).get("cross_refs", [])
 
-    def get_strictest_for_topic(self, topic: str) -> Optional[str]:
+def get_strictest_for_topic(self, topic: str) -> Optional[str]:
         """Standards_map içindeki topic için strictest'i döndür."""
         for item in self.standards_map.get("mappings", []):
             if item.get("topic") == topic:
@@ -99,4 +99,10 @@ class CAGRulesEngine:
         return None
 
 
-__all__ = ["CAGRulesEngine", "CAGRule"]
+def load_default_cag_engine() -> CAGRulesEngine:
+    """Convenience loader for default rulepack."""
+
+    return CAGRulesEngine()
+
+
+__all__ = ["CAGRulesEngine", "CAGRule", "load_default_cag_engine"]

@@ -10,6 +10,8 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from src.utils.compliance import get_available_standards, get_rules_summary, validate_document
+from governance.cag_rules_engine import CAGRulesEngine
+from governance.ess_compliance_scorer import ess_score_from_items
 
 router = APIRouter()
 
@@ -141,13 +143,46 @@ def validate(request: ValidateRequest):
                 detail=f"Invalid standards: {invalid_standards}. Available: {available_standards}",
             )
 
-        # Execute validation
+        # Execute validation (rule-based)
         result = validate_document(
             text=request.text,
             standards=request.standards,
             context=request.context,
             categories=request.categories,
         )
+
+        # Lightweight CAG rulepack load for visibility (no heavy processing)
+        try:
+            cag_engine = CAGRulesEngine()
+            rule_count = len(cag_engine.list_rules())
+            result.warnings.append(
+                {
+                    "message": f"CAG rulepack loaded ({rule_count} rules)",
+                    "severity": "info",
+                }
+            )
+        except Exception:
+            # CAG yüklenemezse mevcut sonucu bozma
+            result.warnings.append(
+                {
+                    "message": "CAG rulepack could not be loaded; skipping deep check",
+                    "severity": "warning",
+                }
+            )
+
+        # ESS skor bilgilendirmesi (isteğe bağlı)
+        try:
+            ess_items = request.context.get("ess_items") or []
+            if ess_items:
+                ess_summary = ess_score_from_items(ess_items)
+                result.warnings.append(
+                    {
+                        "message": f"ESS overall score: {ess_summary.get('overall_score', 0):.1f}",
+                        "severity": "info",
+                    }
+                )
+        except Exception:
+            pass
 
         # Convert to response model
         return ValidateResponse(

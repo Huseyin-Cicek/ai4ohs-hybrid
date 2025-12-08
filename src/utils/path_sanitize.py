@@ -130,7 +130,7 @@ def sanitize_path(
         Optional base directory used when evaluating total path length.
     max_path_length:
         Maximum permitted path length; defaults to the Windows ``MAX_PATH``.
-    """Apply filename rules component-wise and enforce symlink policy if requested.
+    Apply filename rules component-wise and enforce symlink policy if requested.
 
     Parameters
     ----------
